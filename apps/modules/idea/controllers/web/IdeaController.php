@@ -13,6 +13,8 @@ use Idy\Idea\Application\RateIdeaService;
 use Idy\Idea\Application\ViewIdeaService;
 use Idy\Idea\Application\UpdateIdeaService;
 use Idy\Idea\Application\UpdateIdeaRequest;
+use Idy\Idea\Application\VoteIdeaService;
+use Idy\Idea\Application\VoteIdeaRequest;
 
 class IdeaController extends Controller
 {
@@ -53,9 +55,9 @@ class IdeaController extends Controller
         $service = new ViewIdeaService($ideaRepository);
         $idea = $service->byId($this->dispatcher->getParam('ideaId'));
 
-        $service = new UpdateIdeaService($ideaRepository);
+        $service = new VoteIdeaService($ideaRepository);
         $response = $service->update(
-            new UpdateIdeaRequest(
+            new VoteIdeaRequest(
                 $idea->id(),
                 $idea->title(),
                 $idea->description(),
