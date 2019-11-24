@@ -55,3 +55,9 @@ $di->setShared('sql_idea_repository', function() use ($di) {
 
     return $repo;
 });
+
+$di->setShared('sql_rating_repository', function() use ($di) {
+    $repo = new SqlRatingRepository($di);
+
+    return $repo;
+});

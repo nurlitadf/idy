@@ -7,11 +7,17 @@ use Phalcon\Di;
 
 use Idy\Idea\Application\CreateNewIdeaRequest;
 use Idy\Idea\Application\CreateNewIdeaService;
+use Idy\Idea\Application\ViewAllIdeasService;
 
 class IdeaController extends Controller
 {
     public function indexAction()
     {
+        $ideaRepository = Di::getDefault()->get('sql_idea_repository');
+        $service = new ViewAllIdeasService($ideaRepository);
+        $response = $service->findAll();
+        $this->view->setVar('ideas',$response);
+
         return $this->view->pick('home');
     }
 
@@ -33,7 +39,7 @@ class IdeaController extends Controller
             )
         );
 
-        return $this->view->pick('add');
+        return $this->indexAction();
     }
 
     public function voteAction()

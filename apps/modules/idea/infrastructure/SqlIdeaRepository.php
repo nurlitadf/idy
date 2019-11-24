@@ -20,7 +20,10 @@ class SqlIdeaRepository implements IdeaRepository
         $this->connection = $di->get('db');
         $this->statement = [
             'create' => $this->connection->prepare(
-                "INSERT INTO idea VALUES (:id, :title, :description, :authorName, :authorEmail, :votes)"
+                "INSERT INTO idea VALUES (:id, :title, :description, :authorName, :authorEmail, :votes, :averageRating)"
+            ),
+            'findAll' => $this->connection->prepare(
+                "SELECT * from idea"
             )
         ];
 
@@ -32,6 +35,7 @@ class SqlIdeaRepository implements IdeaRepository
                 'authorName' => Column::BIND_PARAM_STR,
                 'authorEmail' => Column::BIND_PARAM_STR,
                 'votes' => Column::BIND_PARAM_INT,
+                'averageRating' => Column::BIND_PARAM_INT,
             ]
         ];
     }
@@ -47,9 +51,10 @@ class SqlIdeaRepository implements IdeaRepository
             'authorName' => $idea->author()->name(),
             'authorEmail' => $idea->author()->email(),
             'votes' => $idea->votes(),
+            'averageRating' => $idea->averageRating(),
         ];
 
-        $success = $this->connection->executePrepared(
+        $this->connection->executePrepared(
             $this->statement['create'],
             $ideaData,
             $this->statementTypes['create']
@@ -69,7 +74,13 @@ class SqlIdeaRepository implements IdeaRepository
 
     public function allIdeas()
     {
+        $result = $this->connection->executePrepared(
+            $this->statement['findAll'],
+            [],
+            []
+        );
 
+        return $result;
     }
     
 }

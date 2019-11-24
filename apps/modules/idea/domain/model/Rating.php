@@ -4,18 +4,18 @@ namespace Idy\Idea\Domain\Model;
 
 class Rating
 {
-    private $user;
+    private $ideaId;
     private $value;
 
-    public function __construct($user, $value) 
+    public function __construct($ideaId, $value) 
     {
-        $this->user = $user;
+        $this->ideaId = $ideaId;
         $this->value = $value;
     }
 
-    public function user()
+    public function ideaId()
     {
-        return $this->user;
+        return $this->ideaId;
     }
 
     public function value()
