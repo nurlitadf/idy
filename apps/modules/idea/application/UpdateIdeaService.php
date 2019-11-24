@@ -6,7 +6,7 @@ use Idy\Idea\Domain\Model\IdeaRepository;
 use Idy\Idea\Domain\Model\Author;
 use Idy\Idea\Domain\Model\Idea;
 
-class CreateNewIdeaService
+class UpdateIdeaService
 {
     private $ideaRepository;
 
@@ -16,35 +16,20 @@ class CreateNewIdeaService
         $this->ideaRepository = $ideaRepository;
     }
 
-    public function create(CreateNewIdeaRequest $request)
+    public function update(UpdateIdeaRequest $request)
     {
         $author = new Author(
             $request->authorName, 
             $request->authorEmail
         );
 
-        $idea = Idea::makeIdea(
+        $idea = new Idea(
+            $request->id,
             $request->ideaTitle,
             $request->description,
-            $author
-        );
-
-        $this->ideaRepository->create($idea);
-
-        return new CreateNewIdeaResponse($idea);
-    }
-
-    public function update(CreateNewIdeaRequest $request)
-    {
-        $author = new Author(
-            $request->authorName, 
-            $request->authorEmail
-        );
-
-        $idea = Idea::makeIdea(
-            $request->ideaTitle,
-            $request->description,
-            $author
+            $author,
+            $request->averageRating,
+            $request->votes
         );
 
         $this->ideaRepository->save($idea);

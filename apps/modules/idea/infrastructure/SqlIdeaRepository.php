@@ -24,6 +24,14 @@ class SqlIdeaRepository implements IdeaRepository
             ),
             'findAll' => $this->connection->prepare(
                 "SELECT * from idea"
+            ),
+            'update' => $this->connection->prepare(
+                "UPDATE idea 
+                SET title = :title, description = :description, author_name = :authorName, author_email = :authorEmail, votes = :votes, averageRating = :averageRating
+                WHERE id = :id"
+            ),
+            'findById' => $this->connection->prepare(
+                "SELECT * from idea WHERE id = :id"
             )
         ];
 
@@ -35,15 +43,25 @@ class SqlIdeaRepository implements IdeaRepository
                 'authorName' => Column::BIND_PARAM_STR,
                 'authorEmail' => Column::BIND_PARAM_STR,
                 'votes' => Column::BIND_PARAM_INT,
-                'averageRating' => Column::BIND_PARAM_INT,
+                'averageRating' => Column::BIND_PARAM_DECIMAL,
+            ],
+            'update' => [
+                'id' => Column::BIND_PARAM_STR,
+                'title' => Column::BIND_PARAM_STR,
+                'description' => Column::BIND_PARAM_STR,
+                'authorName' => Column::BIND_PARAM_STR,
+                'authorEmail' => Column::BIND_PARAM_STR,
+                'votes' => Column::BIND_PARAM_INT,
+                'averageRating' => Column::BIND_PARAM_DECIMAL,
+            ],
+            'findById' => [
+                'id' => Column::BIND_PARAM_STR,
             ]
         ];
     }
 
     public function create(Idea $idea)
     {
-        // var_dump($idea);
-        // exit(0);
         $ideaData = [
             'id' => $idea->id()->id(),
             'title' => $idea->title(),
@@ -62,13 +80,34 @@ class SqlIdeaRepository implements IdeaRepository
         
     }
 
-    public function byId(IdeaId $id)
+    public function byId($id)
     {
-
+        return $this->connection->executePrepared(
+            $this->statement['findById'],
+            ['id' => $id],
+            $this->statementTypes['findById']
+        );
     }
 
     public function save(Idea $idea)
     {
+        // var_dump($idea);
+        // exit(0);
+        $ideaData = [
+            'id' => $idea->id()->id(),
+            'title' => $idea->title(),
+            'description' => $idea->description(),
+            'authorName' => $idea->author()->name(),
+            'authorEmail' => $idea->author()->email(),
+            'votes' => $idea->votes(),
+            'averageRating' => $idea->averageRating(),
+        ];
+
+        $this->connection->executePrepared(
+            $this->statement['update'],
+            $ideaData,
+            $this->statementTypes['update']
+        );
 
     }
 

@@ -3,6 +3,7 @@
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt;
 use Idy\Idea\Infrastructure\SqlIdeaRepository;
+use Idy\Idea\Infrastructure\SqlRatingRepository;
 
 $di['voltServiceMail'] = function($view) use ($di) {
 
