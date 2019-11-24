@@ -29,3 +29,10 @@ $router->addPost('/idea/rate',[
     'controller' => 'idea',
     'action' => 'rate',
 ]);
+
+$router->addGet('/idea/vote/{ideaId}',[
+    'namespace' => $namespace,
+    'module' => 'idea',
+    'controller' => 'idea',
+    'action' => 'vote',
+]);

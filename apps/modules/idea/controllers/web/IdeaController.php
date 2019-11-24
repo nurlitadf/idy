@@ -49,7 +49,23 @@ class IdeaController extends Controller
 
     public function voteAction()
     {
+        $ideaRepository = Di::getDefault()->get('sql_idea_repository');
+        $service = new ViewIdeaService($ideaRepository);
+        $idea = $service->byId($this->dispatcher->getParam('ideaId'));
 
+        $service = new UpdateIdeaService($ideaRepository);
+        $response = $service->update(
+            new UpdateIdeaRequest(
+                $idea->id(),
+                $idea->title(),
+                $idea->description(),
+                $idea->author()->name(),
+                $idea->author()->email(),
+                $idea->averageRating(),
+                $idea->votes()+1
+            )
+        );
+        return $this->response->redirect('');
     }
 
     public function rateViewAction()
