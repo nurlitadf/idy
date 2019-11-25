@@ -37,6 +37,8 @@ class DomainEventPublisher
 
     public function subscribe($aDomainEventSubscriber)
     {
+        // var_dump($aDomainEventSubscriber);
+        // exit(0);
         $id = $this->id;
         $this->subscribers[$id] = $aDomainEventSubscriber;
         $this->id++;

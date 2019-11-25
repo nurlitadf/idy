@@ -12,7 +12,7 @@ class UpdateIdeaRequest
     public $averageRating;
     public $votes;
 
-    public function __construct($id, $ideaTitle, $authorName, $authorEmail, $description, $averageRating, $votes)
+    public function __construct($id, $ideaTitle, $description, $authorName, $authorEmail, $averageRating, $votes)
     {
         $this->id = $id;
         $this->ideaTitle = $ideaTitle;

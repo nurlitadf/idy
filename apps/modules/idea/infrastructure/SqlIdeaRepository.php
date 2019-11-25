@@ -91,8 +91,6 @@ class SqlIdeaRepository implements IdeaRepository
 
     public function save(Idea $idea)
     {
-        // var_dump($idea);
-        // exit(0);
         $ideaData = [
             'id' => $idea->id()->id(),
             'title' => $idea->title(),

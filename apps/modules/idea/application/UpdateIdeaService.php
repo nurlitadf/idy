@@ -5,6 +5,7 @@ namespace Idy\Idea\Application;
 use Idy\Idea\Domain\Model\IdeaRepository;
 use Idy\Idea\Domain\Model\Author;
 use Idy\Idea\Domain\Model\Idea;
+use Idy\Idea\Domain\Model\IdeaId;
 
 class UpdateIdeaService
 {
@@ -24,7 +25,7 @@ class UpdateIdeaService
         );
 
         $idea = new Idea(
-            $request->id,
+            new IdeaId($request->id),
             $request->ideaTitle,
             $request->description,
             $author,

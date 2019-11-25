@@ -18,19 +18,26 @@ class SqlRatingRepository implements RatingRepository
         $this->connection = $di->get('db');
         $this->statement = [
             'create' => $this->connection->prepare(
-                "INSERT INTO rating VALUES (:value, :ideaId)"
+                "INSERT INTO rating VALUES (:value, :ideaId, :user)"
             ),
             'getAverageRatingById' => $this->connection->prepare(
                 "SELECT AVG(value) as avg from rating where ideaid = :ideaId"
             ),
+            'byIdeaId' => $this->connection->prepare(
+                "SELECT * from rating where ideaid = :ideaId"
+            )
         ];
 
         $this->statementTypes = [
             'create' => [
                 'value' => Column::BIND_PARAM_INT,
                 'ideaId' => Column::BIND_PARAM_STR,
+                'user' => Column::BIND_PARAM_STR,
             ],
             'getAverageRatingById' => [
+                'ideaId' => Column::BIND_PARAM_STR,
+            ],
+            'byIdeaId' => [
                 'ideaId' => Column::BIND_PARAM_STR,
             ]
         ];
@@ -38,11 +45,12 @@ class SqlRatingRepository implements RatingRepository
 
     public function create(Rating $rating)
     {
-    //     var_dump($rating);
-    //     exit(0);
+        // var_dump($rating);
+        // exit(0);
         $ratingData = [
             'value' => $rating->value(),
-            'ideaId' => $rating->ideaId()
+            'ideaId' => $rating->ideaId(),
+            'user' => $rating->user(),
         ];
 
         $this->connection->executePrepared(
@@ -54,7 +62,13 @@ class SqlRatingRepository implements RatingRepository
 
     public function byIdeaId($ideaId)
     {
+        $result = $this->connection->executePrepared(
+            $this->statement['byIdeaId'],
+            ['ideaId' => $ideaId],
+            $this->statementTypes['byIdeaId']
+        );
 
+        return $result;
     }
 
     public function getAverageRatingById($ideaId)

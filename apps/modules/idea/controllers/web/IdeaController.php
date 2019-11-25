@@ -80,24 +80,25 @@ class IdeaController extends Controller
     public function rateAction()
     {
         $ratingRepository = Di::getDefault()->get('sql_rating_repository');
-        $service = new RateIdeaService($ratingRepository);
+        $ideaRepository = Di::getDefault()->get('sql_idea_repository');
+        $service = new RateIdeaService($ratingRepository, $ideaRepository);
         $response = $service->create(
             new RateIdeaRequest(
                 $this->request->getPost('ideaId'),
-                (int)$this->request->getPost('value')
+                (int)$this->request->getPost('value'),
+                $this->request->getPost('user')
             )
         );
 
         $newAverageRating = $service->getAverageRatingById($this->request->getPost('ideaId'));
 
-        $ideaRepository = Di::getDefault()->get('sql_idea_repository');
         $service = new ViewIdeaService($ideaRepository);
         $idea = $service->byId($this->request->getPost('ideaId'));
 
         $service = new UpdateIdeaService($ideaRepository);
         $response = $service->update(
             new UpdateIdeaRequest(
-                $idea->id(),
+                $idea->id()->id(),
                 $idea->title(),
                 $idea->description(),
                 $idea->author()->name(),
